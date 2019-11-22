@@ -1,0 +1,19 @@
+#!/bin/sh
+
+myip=$(hostname -I | awk '{print$1}')
+cat <<EOF
+********************************************************************************
+
+Welcome to RethinkDB!
+
+RethinkDB shipped with Apache2.0 license without warranties.
+Read our license https://github.com/rethinkdb/rethinkdb/blob/next/LICENSE.
+
+Do NOT forget to configure your server before use! To secure RethinkDB follow
+the instructions described at https://rethinkdb.com/docs/security/.
+
+RethinkDB instance config: /etc/rethinkdb/instances.d/instance.conf
+RethinkDB log file:        /var/log/rethinkdb
+
+********************************************************************************
+EOF

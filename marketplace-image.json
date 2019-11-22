@@ -1,0 +1,59 @@
+{
+    "variables": {
+      "token": "{{env `DIGITALOCEAN_TOKEN`}}",
+      "rethinkdb_version": "{{env `RETHINKDB_VERSION`}}",
+      "image_id": "{{env `IMAGE_ID`}}",
+      "image_name": "marketplace-snapshot-{{timestamp}}",
+      "apt_packages": "rethinkdb={{user `rethinkdb_version`}}"
+    },
+    "builders": [
+      {
+        "type": "digitalocean",
+        "api_token": "{{user `token`}}",
+        "image": "{{user `image_id`}}",
+        "region": "nyc3",
+        "size": "s-1vcpu-1gb",
+        "ssh_username": "root",
+        "snapshot_name": "{{user `image_name`}}"
+      }
+    ],
+    "provisioners": [
+      {
+        "type": "file",
+        "source": "files/etc/",
+        "destination": "/etc/"
+      },
+      {
+        "type": "file",
+        "source": "files/var/",
+        "destination": "/var/"
+      },
+      {
+        "type": "shell",
+        "scripts": [
+          "scripts/01-setup.sh"
+        ]
+      },
+      {
+        "type": "shell",
+        "inline": [
+          "cloud-init status --wait",
+          "apt -qqy update",
+          "apt-get install -y apt-transport-https ca-certificates",
+          "wget -qO- https://download.rethinkdb.com/apt/pubkey.gpg | apt-key add -",
+          "add-apt-repository \"deb https://download.rethinkdb.com/apt $(lsb_release -cs) main\"",
+          "apt -qqy update",
+          "apt -qqy -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' full-upgrade",
+          "apt -qqy -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' install {{user `apt_packages`}}"
+        ]
+      },
+      {
+        "type": "shell",
+        "scripts": [
+          "scripts/90-cleanup.sh",
+          "scripts/99-img_check.sh"
+        ]
+      }
+    ]
+  }
+  
