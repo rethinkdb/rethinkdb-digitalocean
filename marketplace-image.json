@@ -38,13 +38,13 @@
         "type": "shell",
         "inline": [
           "cloud-init status --wait",
-          "apt -qqy update",
+          "apt-get -qqy update",
           "apt-get install -y apt-transport-https ca-certificates",
-          "apt-key adv --keyserver keys.gnupg.net --recv-keys '539A3A8C6692E6E3F69B3FE81D85E93F801BB43F'",
+          "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys '539A3A8C6692E6E3F69B3FE81D85E93F801BB43F'",
           "add-apt-repository \"deb https://download.rethinkdb.com/repository/ubuntu-$(lsb_release -cs) $(lsb_release -cs) main\"",
-          "apt -qqy update",
-          "apt -qqy -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' full-upgrade",
-          "apt -qqy -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' install {{user `apt_packages`}}"
+          "apt-get -qqy update",
+          "apt-get -qqy -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' full-upgrade",
+          "apt-get -qqy -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' install {{user `apt_packages`}}"
         ]
       },
       {
@@ -56,4 +56,3 @@
       }
     ]
   }
-  
