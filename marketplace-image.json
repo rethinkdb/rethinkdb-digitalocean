@@ -3,7 +3,7 @@
       "token": "{{env `DIGITALOCEAN_TOKEN`}}",
       "rethinkdb_version": "{{env `RETHINKDB_VERSION`}}",
       "image_id": "{{env `IMAGE_ID`}}",
-      "image_name": "marketplace-snapshot-{{timestamp}}",
+      "image_name": "marketplace-snapshot-{{env `RETHINKDB_VERSION`}}-{{timestamp}}",
       "apt_packages": "rethinkdb={{user `rethinkdb_version`}}"
     },
     "builders": [
@@ -31,7 +31,8 @@
       {
         "type": "shell",
         "scripts": [
-          "scripts/01-setup.sh"
+          "scripts/01-setup.sh",
+          "scripts/02-firewall.sh"
         ]
       },
       {
